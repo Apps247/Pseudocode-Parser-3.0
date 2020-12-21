@@ -28,11 +28,11 @@ class VALUE():
     syntax_map = {
         '!=': 'raise SyntaxError("!=")',
         '%': '/100',
-        '//': '#',
+        '/': '/(double)',
         '=': '==',
-        '←' : '=',
+        '←': '=',
         '<>': '!=',
-        '&' : '+ "" +',
+        '&': '+ "" +',
         # 'not' : 'raise SyntaxError("not")',
         'AND': 'and',
         'OR': 'or',
@@ -112,17 +112,19 @@ class VALUE():
 TYPE_DICT = {
     'STRING': 'String',
     'CHAR': 'char',
-    'INTEGER': 'int',
-    'REAL': 'float',
-    'BOOLEAN': 'bool',
+    'INTEGER': 'long',
+    'REAL': 'double ',
+    'BOOLEAN': 'boolean',
 
 }
 INPUT_TYPE_DICT = {
     'String': 'nextLine',
-    'int': 'nextInt',
+    'long' : 'nextLong',
+    'boolean': 'nextBoolean',
 }
 
 symbol_table = {}
+
 
 class DECLARE:
     def __init__(self, pseudocode_line):
@@ -133,6 +135,7 @@ class DECLARE:
 
         self.translated_line = f'{data_type} {identifier};'
 
+
 class CONSTANT:
     def __init__(self, pseudocode_line):
         identifier = pseudocode_line.split('=')[0].split(' ')[1].strip()
@@ -140,9 +143,11 @@ class CONSTANT:
 
         self.translated_line = f'final var {identifier} = {value};'
 
+
 class INPUT:
     def __init__(self, pseudocode_line):
-        prompt = VALUE(' '.join(pseudocode_line.split(' ')[1:-1])).translated_line
+        prompt = VALUE(
+            ' '.join(pseudocode_line.split(' ')[1:-1])).translated_line
         identifier = (pseudocode_line.split(' ')[-1])
 
         self.translated_line = f'System.out.print({prompt}); {identifier} = inputScanner.{INPUT_TYPE_DICT[symbol_table[identifier]]}();'
@@ -155,23 +160,39 @@ class OUTPUT:
         self.translated_line = f'System.out.println({args});'
 
 
+class IF:
+    def __init__(self, pseudocode_line):
+        condition = VALUE(' '.join(pseudocode_line.split(' ')[1:])).translated_line
+
+        self.translated_line = f'if ({condition});'
+
+class ELSE:
+    def __init__(self, pseudocode_line):
+       self.translated_line = '} else {'
+
 class PROCESS:
     def __init__(self, pseudocode_line):
         self.translated_line = VALUE(pseudocode_line).translated_line + ';'
 
+
 class BLOCK_OPENER:
     def __init__(self, pseudocode_line):
-            self.translated_line = '{'
+        self.translated_line = '{'
+
+
 class BLOCK_CLOSER:
     def __init__(self, pseudocode_line):
-            self.translated_line = '}'
+        self.translated_line = '}'
 
 
 KEYWORD_DICT = {
-    'INPUT' : INPUT,
+    'INPUT': INPUT,
     'OUTPUT': OUTPUT,
-    'DECLARE' : DECLARE,
-    'CONSTANT' : CONSTANT,
+    'DECLARE': DECLARE,
+    'CONSTANT': CONSTANT,
+    'IF' : IF,
+    'THEN' : BLOCK_OPENER,
+    'ENDIF' : BLOCK_CLOSER,
 }
 
 
@@ -183,8 +204,8 @@ def translate(pseudocode_lines):
         public static void main(String[] args) {
         Scanner inputScanner = new Scanner(System.in);'''
     ] \
-    + translated_lines + \
-    [
+        + translated_lines + \
+        [
         'inputScanner.close();\n}\n}'
     ]
     return translated_lines

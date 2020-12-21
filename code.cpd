@@ -6,9 +6,9 @@ CONSTANT MinimumAge = 15
 INPUT "Enter your name: " Name
 INPUT "Enter your age: " Age
 
-OUTPUT "Hi " & Age
-
-OUTPUT Age + Age
-OUTPUT Age & Age
-
-OUTPUT Age - MinimumAge
+IF Age >= MinimumAge
+    THEN
+        OUTPUT "Welcome, " & Name
+    ELSE
+        OUTPUT "Sorry, the minimum age is " & MinimumAge
+ENDIF
