@@ -3,10 +3,12 @@ DECLARE Age : INTEGER
 
 CONSTANT MinimumAge = 15
 
+INPUT "Enter your name: " Name
+INPUT "Enter your age: " Age
 
-Age ← 18
+OUTPUT "Hi " & Age
+
+OUTPUT Age + Age
+OUTPUT Age & Age
 
 OUTPUT Age - MinimumAge
-
-OUTPUT "Hi"
-OUTPUT 5+5

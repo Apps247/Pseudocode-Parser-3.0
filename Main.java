@@ -3,11 +3,13 @@ import java.util.Scanner;public class Main {
         Scanner inputScanner = new Scanner(System.in);
 String Name;
 int Age;
-final var MinumumAge =  15;
-Age = 18;
-System.out.println(Age - MinumumAge);
-System.out.println("Hi");
-System.out.println(5+5);
+final var MinimumAge =  15;
+System.out.print("Enter your name: "); Name = inputScanner.nextLine();
+System.out.print("Enter your age: "); Age = inputScanner.nextInt();
+System.out.println("Hi " + "" + Age);
+System.out.println(Age + Age);
+System.out.println(Age + "" + Age);
+System.out.println(Age - MinimumAge);
 inputScanner.close();
 }
 }

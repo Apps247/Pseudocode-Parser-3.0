@@ -32,7 +32,7 @@ class VALUE():
         '=': '==',
         '←' : '=',
         '<>': '!=',
-        # '&' : '+',
+        '&' : '+ "" +',
         # 'not' : 'raise SyntaxError("not")',
         'AND': 'and',
         'OR': 'or',
@@ -118,8 +118,8 @@ TYPE_DICT = {
 
 }
 INPUT_TYPE_DICT = {
-    'STRING': 'nextLine',
-    'INTEGER': 'nextInt',
+    'String': 'nextLine',
+    'int': 'nextInt',
 }
 
 symbol_table = {}
@@ -128,6 +128,8 @@ class DECLARE:
     def __init__(self, pseudocode_line):
         identifier = pseudocode_line.split(':')[0].split(' ')[1].strip()
         data_type = TYPE_DICT[pseudocode_line.split(':')[1].strip()]
+
+        symbol_table[identifier] = data_type
 
         self.translated_line = f'{data_type} {identifier};'
 
@@ -140,7 +142,11 @@ class CONSTANT:
 
 class INPUT:
     def __init__(self, pseudocode_line):
-        prompt = VALUE(' '.join(pseudocode_line.split(' ')[1:])).translated_line
+        prompt = VALUE(' '.join(pseudocode_line.split(' ')[1:-1])).translated_line
+        identifier = (pseudocode_line.split(' ')[-1])
+
+        self.translated_line = f'System.out.print({prompt}); {identifier} = inputScanner.{INPUT_TYPE_DICT[symbol_table[identifier]]}();'
+
 
 class OUTPUT:
     def __init__(self, pseudocode_line):
@@ -162,6 +168,7 @@ class BLOCK_CLOSER:
 
 
 KEYWORD_DICT = {
+    'INPUT' : INPUT,
     'OUTPUT': OUTPUT,
     'DECLARE' : DECLARE,
     'CONSTANT' : CONSTANT,
