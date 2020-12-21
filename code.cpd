@@ -1,0 +1,12 @@
+DECLARE Name : STRING
+DECLARE Age : INTEGER
+
+CONSTANT MinimumAge = 15
+
+
+Age ← 18
+
+OUTPUT Age - MinimumAge
+
+OUTPUT "Hi"
+OUTPUT 5+5
