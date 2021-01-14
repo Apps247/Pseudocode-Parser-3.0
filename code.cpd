@@ -1,14 +1,9 @@
 DECLARE Name : STRING
-DECLARE Age : INTEGER
 
-CONSTANT MinimumAge = 15
+CONSTANT AdminName = "Apps"
 
 INPUT "Enter your name: " Name
-INPUT "Enter your age: " Age
 
-IF Age >= MinimumAge
-    THEN
-        OUTPUT "Welcome, " & Name
-    ELSE
-        OUTPUT "Sorry, the minimum age is " & MinimumAge
-ENDIF
+OUTPUT STRING_COMPARE(Name, AdminName)
+
+

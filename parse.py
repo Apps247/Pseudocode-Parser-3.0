@@ -39,6 +39,8 @@ class VALUE():
         'NOT': 'not',
         'TRUE': 'True',
         'FALSE': 'False',
+
+        'STRING_COMPARE' : 'Utility.stringCompare'
     }
 
     def __init__(self, value):
@@ -118,9 +120,11 @@ TYPE_DICT = {
 
 }
 INPUT_TYPE_DICT = {
-    'String': 'nextLine',
-    'long' : 'nextLong',
-    'boolean': 'nextBoolean',
+    'String': 'nextLine()',
+    'char' : 'next().charAt(0)',
+    'long' : 'nextLong()',
+    'double' : 'nextDouble()',
+    'boolean': 'nextBoolean()',
 }
 
 symbol_table = {}
@@ -150,7 +154,7 @@ class INPUT:
             ' '.join(pseudocode_line.split(' ')[1:-1])).translated_line
         identifier = (pseudocode_line.split(' ')[-1])
 
-        self.translated_line = f'System.out.print({prompt}); {identifier} = inputScanner.{INPUT_TYPE_DICT[symbol_table[identifier]]}();'
+        self.translated_line = f'System.out.print({prompt}); {identifier} = inputScanner.{INPUT_TYPE_DICT[symbol_table[identifier]]};'
 
 
 class OUTPUT:
@@ -163,8 +167,9 @@ class OUTPUT:
 class IF:
     def __init__(self, pseudocode_line):
         condition = VALUE(' '.join(pseudocode_line.split(' ')[1:])).translated_line
+        
 
-        self.translated_line = f'if ({condition});'
+        self.translated_line = f'if ({condition})'
 
 class ELSE:
     def __init__(self, pseudocode_line):
@@ -192,6 +197,7 @@ KEYWORD_DICT = {
     'CONSTANT': CONSTANT,
     'IF' : IF,
     'THEN' : BLOCK_OPENER,
+    'ELSE' : ELSE,
     'ENDIF' : BLOCK_CLOSER,
 }
 
