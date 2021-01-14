@@ -1,9 +1,10 @@
-DECLARE Name : STRING
+DECLARE Direction : CHAR
 
-CONSTANT AdminName = "Apps"
+INPUT "Enter the direction Symbol: " Direction
 
-INPUT "Enter your name: " Name
-
-OUTPUT STRING_COMPARE(Name, AdminName)
-
-
+CASE OF Direction
+    'N' : OUTPUT "North"
+    'S' : OUTPUT "South"
+    'E' : OUTPUT "East"
+    'W' : OUTPUT "West"
+ENDCASE

@@ -1,10 +1,14 @@
 import java.util.Scanner;public class Main {
         public static void main(String[] args) {
         Scanner inputScanner = new Scanner(System.in);
-String Name;
-final var AdminName =  "Apps";
-System.out.print("Enter your name: "); Name = inputScanner.nextLine();
-System.out.println(Utility.stringCompare(Name, AdminName));
+char Direction;
+System.out.print("Enter the direction Symbol: "); Direction = inputScanner.next().charAt(0);
+switch (Direction) {
+case 'N'  : System.out.println("North");break;
+case 'S'  : System.out.println("South");break;
+case 'E'  : System.out.println("East");break;
+case 'W'  : System.out.println("West");break;
+}
 inputScanner.close();
 }
 }

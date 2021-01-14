@@ -129,6 +129,8 @@ INPUT_TYPE_DICT = {
 
 symbol_table = {}
 
+status = [] # * To keep track of blocks being translated that need special actions
+
 
 class DECLARE:
     def __init__(self, pseudocode_line):
@@ -163,6 +165,12 @@ class OUTPUT:
 
         self.translated_line = f'System.out.println({args});'
 
+class OUTPUT_CONT:
+    def __init__(self, pseudocode_line):
+        args = VALUE(' '.join(pseudocode_line.split(' ')[1:])).translated_line
+
+        self.translated_line = f'System.out.print({args});'
+
 
 class IF:
     def __init__(self, pseudocode_line):
@@ -172,12 +180,39 @@ class IF:
         self.translated_line = f'if ({condition})'
 
 class ELSE:
-    def __init__(self, pseudocode_line):
+    def __init__(self):
        self.translated_line = '} else {'
+
+
+class CASE:
+    def __init__(self, pseudocode_line):
+        status.append('CASE')
+        
+        identifier = ' '.join(pseudocode_line.split(' ')[2:])
+
+        self.translated_line = f'switch ({identifier}) {{'
+
+
+
+class FOR:
+    def __init__(self, pseudocode_line):
+        identifier = (pseudocode_line.split('←')[0][3:]).strip()
+        start = ('←'.join(pseudocode_line.split('←')[1:])).split('TO')[0].strip()
+        end = ('←'.join(pseudocode_line.split('←')[1:])).split('TO')[1].strip()
+        # todo: handle keywords such as 'TO' appearing in literals
+        
+        self.translated_line = f'for (int {identifier} = {start}; {identifier} <= {end}; {identifier}++) {{'
+
 
 class PROCESS:
     def __init__(self, pseudocode_line):
-        self.translated_line = VALUE(pseudocode_line).translated_line + ';'
+
+        if 'CASE' in status:
+            split_pseudocode_line = pseudocode_line.split(':')
+            self.translated_line = 'case ' + split_pseudocode_line[0] + ' : ' + KEYWORD_DICT.get(':'.join(split_pseudocode_line[1:]).strip().split(' ')[0], PROCESS)(':'.join(split_pseudocode_line[1:]).strip()).translated_line + ' break;'
+            # todo: handle cases such as ':' (string literal)
+        else:
+            self.translated_line = VALUE(pseudocode_line).translated_line + ';'
 
 
 class BLOCK_OPENER:
@@ -193,12 +228,17 @@ class BLOCK_CLOSER:
 KEYWORD_DICT = {
     'INPUT': INPUT,
     'OUTPUT': OUTPUT,
+    'OUTPUT_CONT': OUTPUT_CONT,
     'DECLARE': DECLARE,
     'CONSTANT': CONSTANT,
     'IF' : IF,
     'THEN' : BLOCK_OPENER,
     'ELSE' : ELSE,
     'ENDIF' : BLOCK_CLOSER,
+    'CASE' : CASE,
+    'ENDCASE' : BLOCK_CLOSER,
+    'FOR' : FOR,
+    'ENDFOR' : BLOCK_CLOSER,
 }
 
 
