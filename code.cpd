@@ -1,10 +1,17 @@
-DECLARE Direction : CHAR
+DECLARE Username : STRING
+DECLARE Password : STRING
 
-INPUT "Enter the direction Symbol: " Direction
+CONSTANT Correct_Username = "Apps247"
+CONSTANT Correct_Password = "yoyothrower247"
 
-CASE OF Direction
-    'N' : OUTPUT "North"
-    'S' : OUTPUT "South"
-    'E' : OUTPUT "East"
-    'W' : OUTPUT "West"
-ENDCASE
+INPUT "Welcome. Please enter your username:\n" Username
+
+IF STRING_COMPARE(Correct_Username, Username)
+    THEN
+        INPUT "Password:\n" Password
+        WHILE NOT STRING_COMPARE(Password, Correct_Password)
+            INPUT "Password:\n" Password
+        ENDWHILE     
+    ELSE
+        OUTPUT "Sorry, your username was not recognized"
+ENDIF

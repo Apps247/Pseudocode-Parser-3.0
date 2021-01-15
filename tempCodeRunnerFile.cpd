@@ -1,0 +1,3 @@
+WHILE Password <> Correct_Password
+            INPUT "Password:\n" Password
+        ENDWHILE        

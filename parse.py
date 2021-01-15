@@ -34,9 +34,9 @@ class VALUE():
         '<>': '!=',
         '&': '+ "" +',
         # 'not' : 'raise SyntaxError("not")',
-        'AND': 'and',
-        'OR': 'or',
-        'NOT': 'not',
+        'AND': '&&',
+        'OR': '||',
+        'NOT': '!',
         'TRUE': 'True',
         'FALSE': 'False',
 
@@ -176,11 +176,10 @@ class IF:
     def __init__(self, pseudocode_line):
         condition = VALUE(' '.join(pseudocode_line.split(' ')[1:])).translated_line
         
-
         self.translated_line = f'if ({condition})'
 
 class ELSE:
-    def __init__(self):
+    def __init__(self, pseudocode_line):
        self.translated_line = '} else {'
 
 
@@ -193,7 +192,6 @@ class CASE:
         self.translated_line = f'switch ({identifier}) {{'
 
 
-
 class FOR:
     def __init__(self, pseudocode_line):
         identifier = (pseudocode_line.split('←')[0][3:]).strip()
@@ -204,10 +202,17 @@ class FOR:
         self.translated_line = f'for (int {identifier} = {start}; {identifier} <= {end}; {identifier}++) {{'
 
 
+class WHILE:
+    def __init__(self, pseudocode_line):
+        condition = VALUE(' '.join(pseudocode_line.split(' ')[1:])).translated_line
+        
+        self.translated_line = f'while ({condition}) {{'
+
+
 class PROCESS:
     def __init__(self, pseudocode_line):
 
-        if 'CASE' in status:
+        if ('CASE' in status):
             split_pseudocode_line = pseudocode_line.split(':')
             self.translated_line = 'case ' + split_pseudocode_line[0] + ' : ' + KEYWORD_DICT.get(':'.join(split_pseudocode_line[1:]).strip().split(' ')[0], PROCESS)(':'.join(split_pseudocode_line[1:]).strip()).translated_line + ' break;'
             # todo: handle cases such as ':' (string literal)
@@ -239,8 +244,9 @@ KEYWORD_DICT = {
     'ENDCASE' : BLOCK_CLOSER,
     'FOR' : FOR,
     'ENDFOR' : BLOCK_CLOSER,
+    'WHILE' : WHILE,
+    'ENDWHILE' : BLOCK_CLOSER,
 }
-
 
 def translate(pseudocode_lines):
     translated_lines = [KEYWORD_DICT.get(line.strip().split(' ')[0], PROCESS)(
