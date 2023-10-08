@@ -13,6 +13,8 @@ This is a project that aims to parse pseudocode into executable code in differen
 
 ## Usage
 
+Note: this is an experimental project, and it is very difficult to comprehend 
+
 To run the project, you need to have Java installed on your machine. You can download Java from [here](^1^).
 
 To launch the GUI, run the following command in the terminal:
